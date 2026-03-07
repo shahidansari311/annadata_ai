@@ -7,56 +7,34 @@ import {
   Truck,
   ArrowRight,
   Mic,
-  ChevronDown,
+  Play,
+  PlayCircle,
 } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import ScrollReveal from '../components/ScrollReveal'
 import AnimatedCounter from '../components/AnimatedCounter'
 import ParticleField from '../components/ParticleField'
+import { useLang } from '../context/LanguageContext'
 import './Home.css'
-
-const features = [
-  {
-    icon: <Wheat size={28} />,
-    title: 'Crop Intelligence',
-    desc: 'Get detailed insights on 200+ crops including soil requirements, irrigation schedules, pest management, and fertilizer recommendations tailored to your region.',
-    link: '/crops',
-  },
-  {
-    icon: <Users size={28} />,
-    title: 'Expert Community',
-    desc: 'Connect with agricultural experts, ask questions in your local language, and share knowledge with fellow farmers across India.',
-    link: '/community',
-  },
-  {
-    icon: <BarChart3 size={28} />,
-    title: 'Live Mandi Rates',
-    desc: 'Track real-time commodity prices from mandis across districts. Compare rates, view trends, and make informed selling decisions.',
-    link: '/mandi-rates',
-  },
-  {
-    icon: <Truck size={28} />,
-    title: 'Transport & Logistics',
-    desc: 'Request crop pickup, connect with nearby transport providers, and track your deliveries from farm to mandi seamlessly.',
-    link: '/transport',
-  },
-]
 
 const testimonials = [
   {
     text: 'Annadata AI helped me understand which fertilizers to use for my wheat crop. My yield increased by 30% this season!',
+    textHi: 'अन्नदाता AI ने मुझे समझने में मदद की कि मेरी गेहूं की फसल के लिए कौन से उर्वरक का उपयोग करना है। इस सीजन में मेरी उपज 30% बढ़ गई!',
     name: 'Ramesh Kumar',
     location: 'Madhya Pradesh',
     initials: 'RK',
   },
   {
     text: 'The mandi rate feature saves me time every day. I can compare prices and sell at the best rate without travelling to multiple markets.',
+    textHi: 'मंडी भाव की सुविधा मुझे हर दिन समय बचाती है। मैं कई बाज़ारों में जाए बिना कीमतों की तुलना कर सकता हूं और सबसे अच्छे दाम पर बेच सकता हूं।',
     name: 'Sushila Devi',
     location: 'Rajasthan',
     initials: 'SD',
   },
   {
     text: 'I love the community feature. I got expert advice on pest control for my cotton crop within hours of asking my question.',
+    textHi: 'मुझे समुदाय फीचर बहुत पसंद है। मेरे कपास की फसल के कीट नियंत्रण पर मुझे कुछ ही घंटों में विशेषज्ञ सलाह मिल गई।',
     name: 'Prakash Patil',
     location: 'Maharashtra',
     initials: 'PP',
@@ -70,6 +48,43 @@ const pageTransition = {
 }
 
 function Home() {
+  const { t, lang } = useLang()
+
+  const features = [
+    {
+      icon: <Wheat size={28} />,
+      title: t('features.cropIntel'),
+      desc: t('features.cropIntelDesc'),
+      link: '/crops',
+    },
+    {
+      icon: <Users size={28} />,
+      title: t('features.community'),
+      desc: t('features.communityDesc'),
+      link: '/community',
+    },
+    {
+      icon: <BarChart3 size={28} />,
+      title: t('features.mandiRates'),
+      desc: t('features.mandiRatesDesc'),
+      link: '/mandi-rates',
+    },
+    {
+      icon: <Truck size={28} />,
+      title: t('features.transport'),
+      desc: t('features.transportDesc'),
+      link: '/transport',
+    },
+  ]
+
+  const steps = [
+    { step: 1, title: t('howItWorks.step1Title'), desc: t('howItWorks.step1Desc') },
+    { step: 2, title: t('howItWorks.step2Title'), desc: t('howItWorks.step2Desc') },
+    { step: 3, title: t('howItWorks.step3Title'), desc: t('howItWorks.step3Desc') },
+  ]
+
+  const howToSteps = t('howToUse.steps')
+
   return (
     <motion.div className="page-wrapper" {...pageTransition}>
       {/* ========= HERO ========= */}
@@ -87,26 +102,22 @@ function Home() {
           >
             <div className="hero-badge">
               <span className="hero-badge-dot" />
-              Empowering 140M+ Indian Farmers
+              {t('hero.badge')}
             </div>
 
             <h1>
-              Smart Farming{' '}
-              <span className="gradient-text">Starts Here</span>
+              {t('hero.title1')}{' '}
+              <span className="gradient-text">{t('hero.title2')}</span>
             </h1>
 
-            <p className="hero-subtitle">
-              AI-powered crop intelligence, real-time market data, community
-              expertise, and logistics — everything a modern farmer needs, in
-              one platform.
-            </p>
+            <p className="hero-subtitle">{t('hero.subtitle')}</p>
 
             <div className="hero-actions">
               <Link to="/crops" className="btn-primary">
-                Explore Crops <ArrowRight size={18} />
+                {t('hero.exploreCrops')} <ArrowRight size={18} />
               </Link>
               <Link to="/ai-assistant" className="btn-outline">
-                <Mic size={18} /> Try AI Assistant
+                <Mic size={18} /> {t('hero.tryAI')}
               </Link>
             </div>
           </motion.div>
@@ -118,7 +129,7 @@ function Home() {
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
         >
-          Scroll
+          {t('hero.scroll')}
           <div className="scroll-line" />
         </motion.div>
       </section>
@@ -127,9 +138,9 @@ function Home() {
       <section className="section" id="features">
         <div className="container">
           <SectionHeader
-            tag="Platform Features"
-            title="Everything Your Farm Needs"
-            subtitle="From crop selection to market sale — Annadata AI supports every step of your agricultural journey with intelligent tools."
+            tag={t('features.tag')}
+            title={t('features.title')}
+            subtitle={t('features.subtitle')}
           />
 
           <div className="features-grid">
@@ -160,25 +171,25 @@ function Home() {
               <div className="stat-number">
                 <AnimatedCounter end={140} suffix="M+" />
               </div>
-              <div className="stat-label">Indian Farmers</div>
+              <div className="stat-label">{t('stats.farmers')}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">
                 <AnimatedCounter end={200} suffix="+" />
               </div>
-              <div className="stat-label">Crop Varieties</div>
+              <div className="stat-label">{t('stats.crops')}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">
                 <AnimatedCounter end={500} suffix="+" />
               </div>
-              <div className="stat-label">Mandis Tracked</div>
+              <div className="stat-label">{t('stats.mandis')}</div>
             </div>
             <div className="stat-item">
               <div className="stat-number">
                 <AnimatedCounter end={28} suffix="" />
               </div>
-              <div className="stat-label">States Covered</div>
+              <div className="stat-label">{t('stats.states')}</div>
             </div>
           </div>
         </div>
@@ -188,29 +199,13 @@ function Home() {
       <section className="section" id="how-it-works">
         <div className="container">
           <SectionHeader
-            tag="How It Works"
-            title="Three Simple Steps"
-            subtitle="Get started with Annadata AI in minutes — no complex setup required."
+            tag={t('howItWorks.tag')}
+            title={t('howItWorks.title')}
+            subtitle={t('howItWorks.subtitle')}
           />
 
           <div className="how-it-works-grid">
-            {[
-              {
-                step: 1,
-                title: 'Choose Your Crop',
-                desc: 'Select your crop from our library or ask our AI assistant for recommendations based on your soil and climate.',
-              },
-              {
-                step: 2,
-                title: 'Get Smart Insights',
-                desc: 'Receive AI-powered guidance on irrigation, fertilizers, pest control, and the best time to harvest.',
-              },
-              {
-                step: 3,
-                title: 'Sell at Best Price',
-                desc: 'Check live mandi rates, compare prices across markets, and arrange transport directly from the platform.',
-              },
-            ].map((s, i) => (
+            {steps.map((s, i) => (
               <ScrollReveal key={s.step} delay={i * 0.15}>
                 <div className="step-card">
                   <motion.div
@@ -228,26 +223,89 @@ function Home() {
         </div>
       </section>
 
+      {/* ========= HOW TO USE VIDEO ========= */}
+      <section className="section how-to-use-section" id="how-to-use">
+        <div className="container">
+          <SectionHeader
+            tag={t('howToUse.tag')}
+            title={t('howToUse.title')}
+            subtitle={t('howToUse.subtitle')}
+            tagIcon={<Play size={14} />}
+          />
+
+          <div className="how-to-use-layout">
+            <ScrollReveal direction="left">
+              <div className="video-player-card">
+                <div className="video-embed-wrapper">
+                  <iframe
+                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    title={t('howToUse.videoTitle')}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+                <div className="video-info">
+                  <div className="video-info-left">
+                    <h4>{t('howToUse.videoTitle')}</h4>
+                    <span>{t('howToUse.duration')}</span>
+                  </div>
+                  <a
+                    href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-outline video-full-btn"
+                  >
+                    <PlayCircle size={16} /> {t('howToUse.watchFull')}
+                  </a>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            <ScrollReveal direction="right">
+              <div className="video-steps">
+                {Array.isArray(howToSteps) && howToSteps.map((step, i) => (
+                  <motion.div
+                    key={i}
+                    className="video-step-item"
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <div className="video-step-num">{i + 1}</div>
+                    <div>
+                      <h4>{step.title}</h4>
+                      <p>{step.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
       {/* ========= TESTIMONIALS ========= */}
       <section className="section" id="testimonials">
         <div className="container">
           <SectionHeader
-            tag="Testimonials"
-            title="Trusted by Farmers"
-            subtitle="Hear from real farmers who are transforming their agricultural practices with Annadata AI."
+            tag={t('testimonials.tag')}
+            title={t('testimonials.title')}
+            subtitle={t('testimonials.subtitle')}
           />
 
           <div className="testimonials-grid">
-            {testimonials.map((t, i) => (
-              <ScrollReveal key={t.name} delay={i * 0.1}>
+            {testimonials.map((item, i) => (
+              <ScrollReveal key={item.name} delay={i * 0.1}>
                 <div className="testimonial-card">
                   <span className="testimonial-quote">"</span>
-                  <p>{t.text}</p>
+                  <p>{lang === 'hi' ? item.textHi : item.text}</p>
                   <div className="testimonial-author">
-                    <div className="testimonial-avatar">{t.initials}</div>
+                    <div className="testimonial-avatar">{item.initials}</div>
                     <div className="testimonial-info">
-                      <h4>{t.name}</h4>
-                      <span>{t.location}</span>
+                      <h4>{item.name}</h4>
+                      <span>{item.location}</span>
                     </div>
                   </div>
                 </div>
@@ -263,18 +321,15 @@ function Home() {
           <ScrollReveal>
             <div className="cta-content">
               <h2>
-                Ready to <span className="gradient-text">Grow Smarter</span>?
+                {t('cta.title1')} <span className="gradient-text">{t('cta.title2')}</span>?
               </h2>
-              <p>
-                Join thousands of farmers already using Annadata AI to increase
-                yields, reduce costs, and access better markets.
-              </p>
+              <p>{t('cta.subtitle')}</p>
               <div className="cta-actions">
                 <Link to="/crops" className="btn-primary">
-                  Get Started <ArrowRight size={18} />
+                  {t('cta.getStarted')} <ArrowRight size={18} />
                 </Link>
                 <Link to="/about" className="btn-outline">
-                  Learn More
+                  {t('cta.learnMore')}
                 </Link>
               </div>
             </div>

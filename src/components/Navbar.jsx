@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Sprout } from 'lucide-react'
+import { useLang } from '../context/LanguageContext'
 import './Navbar.css'
-
-const navItems = [
-  { path: '/', label: 'Home' },
-  { path: '/crops', label: 'Crop Library' },
-  { path: '/community', label: 'Community' },
-  { path: '/mandi-rates', label: 'Mandi Rates' },
-  { path: '/transport', label: 'Transport' },
-  { path: '/about', label: 'About' },
-]
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+  const { t, toggleLang, lang } = useLang()
+
+  const navItems = [
+    { path: '/', label: t('nav.home') },
+    { path: '/crops', label: t('nav.cropLibrary') },
+    { path: '/community', label: t('nav.community') },
+    { path: '/mandi-rates', label: t('nav.mandiRates') },
+    { path: '/transport', label: t('nav.transport') },
+    { path: '/about', label: t('nav.about') },
+  ]
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40)
@@ -62,20 +64,31 @@ function Navbar() {
               {item.label}
             </Link>
           ))}
+
+          <button className="nav-lang-toggle" onClick={toggleLang} aria-label="Switch language">
+            <span className="nav-lang-flag">{lang === 'en' ? '🇮🇳' : '🇬🇧'}</span>
+            {t('nav.langSwitch')}
+          </button>
+
           <Link to="/ai-assistant" className="nav-cta">
-            AI Assistant
+            {t('nav.aiAssistant')}
           </Link>
         </div>
 
-        <button
-          className={`nav-toggle ${mobileOpen ? 'open' : ''}`}
-          onClick={() => setMobileOpen(!mobileOpen)}
-          aria-label="Toggle navigation"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+        <div className="nav-mobile-right">
+          <button className="nav-lang-toggle mobile" onClick={toggleLang} aria-label="Switch language">
+            <span className="nav-lang-flag">{lang === 'en' ? '🇮🇳' : '🇬🇧'}</span>
+          </button>
+          <button
+            className={`nav-toggle ${mobileOpen ? 'open' : ''}`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle navigation"
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
 
         <div className={`nav-mobile-overlay ${mobileOpen ? 'open' : ''}`}>
           {navItems.map((item) => (
@@ -88,7 +101,7 @@ function Navbar() {
             </Link>
           ))}
           <Link to="/ai-assistant" className="nav-cta">
-            AI Assistant
+            {t('nav.aiAssistant')}
           </Link>
         </div>
       </div>

@@ -378,6 +378,114 @@
   flex-wrap: wrap;
 }
 
+/* --- How To Use Video --- */
+.how-to-use-section {
+  background: var(--color-bg-main);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.how-to-use-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space-2xl);
+  align-items: flex-start;
+}
+
+.video-player-card {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.video-embed-wrapper {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 */
+  background: #000;
+}
+
+.video-embed-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-info {
+  padding: var(--space-lg) var(--space-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.video-info-left h4 {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.video-info-left span {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.video-full-btn {
+  padding: 0.5rem 1.2rem;
+  font-size: 0.8rem;
+}
+
+.video-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.video-step-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.video-step-item:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card-hover);
+}
+
+.video-step-num {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.video-step-item h4 {
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+
+.video-step-item p {
+  font-size: 0.88rem;
+}
+
 /* --- Responsive --- */
 @media (max-width: 768px) {
   .stats-grid {
@@ -392,6 +500,9 @@
   }
   .hero h1 {
     font-size: clamp(2rem, 7vw, 3rem);
+  }
+  .how-to-use-layout {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -408,3 +519,4 @@
     text-align: center;
   }
 }
+
