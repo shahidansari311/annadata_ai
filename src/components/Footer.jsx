@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom'
 import { Sprout } from 'lucide-react'
 import { FaTwitter, FaInstagram, FaYoutube, FaLinkedin } from 'react-icons/fa'
+import { useLang } from '../context/LanguageContext'
 import './Footer.css'
 
 function Footer() {
+  const { t } = useLang()
+
   return (
     <footer className="footer">
       <div className="container">
@@ -15,7 +18,7 @@ function Footer() {
               </div>
               Annadata<span style={{ color: 'var(--color-accent)' }}>AI</span>
             </Link>
-            <p>Empowering Indian farmers with AI-driven crop intelligence, real-time market data, and community support.</p>
+            <p>{t('footer.desc')}</p>
             <div className="footer-social">
               <a href="#" aria-label="Twitter"><FaTwitter /></a>
               <a href="#" aria-label="Instagram"><FaInstagram /></a>
@@ -25,27 +28,27 @@ function Footer() {
           </div>
 
           <div className="footer-column">
-            <h4>Platform</h4>
+            <h4>{t('footer.platform')}</h4>
             <ul>
-              <li><Link to="/crops">Crop Library</Link></li>
-              <li><Link to="/community">Community</Link></li>
-              <li><Link to="/mandi-rates">Mandi Rates</Link></li>
-              <li><Link to="/transport">Transport</Link></li>
+              <li><Link to="/crops">{t('nav.cropLibrary')}</Link></li>
+              <li><Link to="/community">{t('nav.community')}</Link></li>
+              <li><Link to="/mandi-rates">{t('nav.mandiRates')}</Link></li>
+              <li><Link to="/transport">{t('nav.transport')}</Link></li>
             </ul>
           </div>
 
           <div className="footer-column">
-            <h4>Resources</h4>
+            <h4>{t('footer.resources')}</h4>
             <ul>
-              <li><Link to="/ai-assistant">AI Assistant</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Help Center</a></li>
+              <li><Link to="/ai-assistant">{t('nav.aiAssistant')}</Link></li>
+              <li><Link to="/about">{t('footer.aboutUs')}</Link></li>
+              <li><a href="#">{t('footer.blog')}</a></li>
+              <li><a href="#">{t('footer.helpCenter')}</a></li>
             </ul>
           </div>
 
           <div className="footer-column">
-            <h4>Contact</h4>
+            <h4>{t('footer.contact')}</h4>
             <ul>
               <li><a href="mailto:hello@annadata.ai">hello@annadata.ai</a></li>
               <li><a href="#">+91 98765 43210</a></li>
@@ -55,10 +58,10 @@ function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <p>© 2026 Annadata AI. All rights reserved.</p>
+          <p>{t('footer.copyright')}</p>
           <div className="footer-bottom-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <a href="#">{t('footer.privacyPolicy')}</a>
+            <a href="#">{t('footer.termsOfService')}</a>
           </div>
         </div>
       </div>
