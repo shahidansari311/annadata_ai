@@ -1,0 +1,186 @@
+/* ===============================
+   MANDI RATES PAGE
+   =============================== */
+
+.mandi-page {
+  padding-top: calc(var(--nav-height) + var(--space-3xl));
+}
+
+.mandi-controls {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+  flex-wrap: wrap;
+}
+
+.mandi-select {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.8rem 1rem;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23b8c4b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+}
+
+.mandi-select:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-glow);
+}
+
+.mandi-last-update {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.mandi-last-update .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-success);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.mandi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-lg);
+}
+
+.mandi-card {
+  padding: var(--space-xl);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.mandi-card:hover {
+  border-color: var(--color-border-hover);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.mandi-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+}
+
+.mandi-card-header h3 {
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.mandi-card-header .emoji {
+  font-size: 1.5rem;
+}
+
+.mandi-trend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-full);
+}
+
+.mandi-trend.up {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.mandi-trend.down {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.mandi-trend.stable {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.1);
+}
+
+.mandi-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mandi-price-row:last-child {
+  border-bottom: none;
+}
+
+.mandi-price-label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.mandi-price-value {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.mandi-price-value.highlight {
+  color: var(--color-accent);
+  font-size: 1.15rem;
+}
+
+/* Sparkline bar */
+.mandi-sparkline {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 32px;
+  margin-top: var(--space-md);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border);
+}
+
+.mandi-spark-bar {
+  flex: 1;
+  background: var(--color-accent);
+  border-radius: 2px 2px 0 0;
+  opacity: 0.5;
+  transition: opacity var(--transition-fast);
+  min-width: 4px;
+}
+
+.mandi-spark-bar:last-child {
+  opacity: 1;
+}
+
+.mandi-spark-bar:hover {
+  opacity: 1;
+}
+
+.mandi-spark-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}
+
+@media (max-width: 480px) {
+  .mandi-controls {
+    flex-direction: column;
+  }
+}

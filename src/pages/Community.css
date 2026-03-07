@@ -1,0 +1,215 @@
+/* ===============================
+   COMMUNITY PAGE
+   =============================== */
+
+.community-page {
+  padding-top: calc(var(--nav-height) + var(--space-3xl));
+}
+
+.community-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2xl);
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.community-tabs {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.community-tab {
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.community-tab.active,
+.community-tab:hover {
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border-color: var(--color-accent);
+}
+
+.ask-question-btn {
+  padding: 0.65rem 1.6rem;
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.ask-question-btn:hover {
+  background: var(--color-accent-dim);
+  transform: translateY(-2px);
+}
+
+.community-threads {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.thread-card {
+  padding: var(--space-xl);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  display: flex;
+  gap: var(--space-xl);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.thread-card:hover {
+  border-color: var(--color-border-hover);
+  background: var(--color-bg-card-hover);
+}
+
+.thread-votes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  min-width: 48px;
+}
+
+.thread-vote-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.thread-vote-btn:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.thread-vote-count {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-text-primary);
+}
+
+.thread-content {
+  flex: 1;
+}
+
+.thread-content h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.thread-content p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-md);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.thread-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
+}
+
+.thread-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.thread-badge {
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge-expert {
+  background: rgba(200, 245, 66, 0.15);
+  color: var(--color-accent);
+}
+
+.badge-verified {
+  background: rgba(74, 222, 128, 0.15);
+  color: #4ade80;
+}
+
+.badge-popular {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fbbf24;
+}
+
+.thread-tags {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.thread-tags span {
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-full);
+  font-size: 0.7rem;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.language-hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-accent-glow);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xl);
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.language-hint strong {
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .thread-card {
+    flex-direction: column;
+  }
+  .thread-votes {
+    flex-direction: row;
+    min-width: auto;
+  }
+}
