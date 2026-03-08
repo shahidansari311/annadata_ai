@@ -22,10 +22,26 @@ import aiRoutes from './routes/ai.js'
 const app = express()
 const PORT = process.env.PORT || 5000
 
-// ── Middleware ──────────────────────────────────────────────
-const clientUrl = (process.env.CLIENT_URL || 'http://localhost:5173').replace(/\/$/, '')
+const allowedOrigins = [
+  'https://annadata-ai-xnords.vercel.app',
+  'http://localhost:5173',
+  process.env.CLIENT_URL
+].filter(Boolean).map(url => url.replace(/\/$/, ''))
+
 app.use(cors({
-  origin: [clientUrl, 'http://localhost:5173'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true)
+    
+    const isAllowed = allowedOrigins.some(allowed => origin === allowed) || 
+                     origin.endsWith('.vercel.app')
+    
+    if (isAllowed) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
 }))
 app.use(express.json({ limit: '10mb' }))
