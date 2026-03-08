@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Mic, Send, Sprout, Sparkles } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import { useLang } from '../context/LanguageContext'
+import { aiAPI } from '../services/api'
 import './AIAssistant.css'
 
 const sampleQueries = [
@@ -13,19 +14,6 @@ const sampleQueries = [
   { text: 'Suggest organic farming practices', textHi: 'जैविक खेती के तरीके सुझाएं', icon: '🌿' },
   { text: 'Best mandi for cotton in Gujarat', textHi: 'गुजरात में कपास के लिए सबसे अच्छी मंडी', icon: '📊' },
 ]
-
-const botResponses = {
-  'Best crop for sandy soil?': `Great question! For **sandy soil**, here are top crop recommendations:\n\n• **Groundnut** — Thrives in sandy loam, good returns\n• **Pearl Millet (Bajra)** — Drought-tolerant, ideal for sandy regions\n• **Mustard** — Performs well in light sandy soils\n• **Watermelon** — Excellent for summer cultivation\n• **Moong Dal** — Good nitrogen fixer for sandy soils\n\nWould you like specific sowing schedules or fertilizer recommendations for any of these?`,
-  'रेतीली मिट्टी के लिए सबसे अच्छी फसल?': `बढ़िया सवाल! **रेतीली मिट्टी** के लिए सबसे अच्छी फसलें:\n\n• **मूंगफली** — रेतीली दोमट में अच्छी उपज\n• **बाजरा** — सूखा सहनशील, रेतीले क्षेत्रों के लिए आदर्श\n• **सरसों** — हल्की रेतीली मिट्टी में अच्छा प्रदर्शन\n• **तरबूज** — गर्मी की खेती के लिए बेहतरीन\n• **मूंग दाल** — नाइट्रोजन फिक्सर\n\nक्या आप इनमें से किसी के लिए बुवाई अनुसूची या उर्वरक सिफारिशें चाहेंगे?`,
-  'How to control aphids in wheat?': `Here are effective methods to **control aphids in wheat**:\n\n**Organic Methods:**\n• Spray **neem oil** (5ml/litre) early morning\n• Release **ladybird beetles** (natural predators)\n• Use **yellow sticky traps** in the field\n\n**Chemical Methods:**\n• Spray **Imidacloprid** 17.8 SL (0.5ml/litre)\n• Apply **Dimethoate** 30 EC (1.5ml/litre)\n\n⚠️ Always follow recommended doses and safety precautions.`,
-  'गेहूं में माहू कैसे नियंत्रित करें?': `**गेहूं में माहू** नियंत्रित करने के प्रभावी तरीके:\n\n**जैविक तरीके:**\n• **नीम का तेल** (5ml/लीटर) सुबह छिड़काव करें\n• **लेडीबर्ड बीटल** (प्राकृतिक शत्रु) छोड़ें\n• खेत में **पीले चिपचिपे जाल** लगाएं\n\n**रासायनिक तरीके:**\n• **इमिडाक्लोप्रिड** 17.8 SL (0.5ml/लीटर) का छिड़काव\n• **डाइमेथोएट** 30 EC (1.5ml/लीटर) का प्रयोग\n\n⚠️ हमेशा अनुशंसित खुराक और सुरक्षा सावधानियों का पालन करें।`,
-  'When to sow mustard in Rajasthan?': `For **mustard sowing in Rajasthan**:\n\n🗓️ **Optimal time:** October 10–25\n\n**Recommended varieties:**\n• RH-749 (early maturing)\n• Bio-902 (high yielding)\n• Pusa Bold (for irrigated conditions)\n\n**Key tips:**\n• Seed rate: 3-4 kg/ha\n• Row spacing: 30-45 cm\n• Apply SSP before sowing\n• First irrigation at 25-30 days`,
-  'राजस्थान में सरसों कब बोएं?': `**राजस्थान में सरसों** की बुवाई:\n\n🗓️ **सर्वोत्तम समय:** 10-25 अक्टूबर\n\n**अनुशंसित किस्में:**\n• RH-749 (जल्दी पकने वाली)\n• Bio-902 (अधिक उपज)\n• पूसा बोल्ड (सिंचित स्थितियों के लिए)\n\n**मुख्य टिप्स:**\n• बीज दर: 3-4 kg/ha\n• पंक्ति दूरी: 30-45 cm\n• बुवाई से पहले SSP डालें\n• पहली सिंचाई 25-30 दिन पर`,
-}
-
-const defaultResponse = `Thank you for your question! Based on my agricultural knowledge base, here are some insights:\n\n• I recommend consulting with your local **Krishi Vigyan Kendra (KVK)** for region-specific advice\n• You can also check our **Crop Library** for detailed crop information\n• The **Community section** has expert farmers who might have practical experience\n\nWould you like me to help with anything else? 🌾`
-
-const defaultResponseHi = `आपके प्रश्न के लिए धन्यवाद! मेरे कृषि ज्ञान के आधार पर कुछ सुझाव:\n\n• क्षेत्र-विशिष्ट सलाह के लिए अपने स्थानीय **कृषि विज्ञान केंद्र (KVK)** से परामर्श लें\n• विस्तृत फसल जानकारी के लिए हमारी **फसल पुस्तकालय** देखें\n• **समुदाय** में अनुभवी किसानों से व्यावहारिक सलाह मिल सकती है\n\nक्या मैं किसी और चीज़ में मदद कर सकता हूं? 🌾`
 
 const pageTransition = {
   initial: { opacity: 0 },
@@ -39,21 +27,22 @@ function AIAssistant() {
     {
       id: 1, type: 'bot',
       text: t('aiPage.welcomeMsg'),
-      time: '10:30 AM',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ])
   const [input, setInput] = useState('')
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+  const [sessionId] = useState(() => `session_${Date.now()}`)
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const handleSend = (text) => {
+  const handleSend = async (text) => {
     const msg = text || input.trim()
-    if (!msg) return
+    if (!msg || isTyping) return
 
     const userMsg = {
       id: Date.now(), type: 'user', text: msg,
@@ -63,15 +52,24 @@ function AIAssistant() {
     setInput('')
     setIsTyping(true)
 
-    setTimeout(() => {
-      const responseText = botResponses[msg] || (lang === 'hi' ? defaultResponseHi : defaultResponse)
+    try {
+      const data = await aiAPI.chat(msg, sessionId)
       const botMsg = {
-        id: Date.now() + 1, type: 'bot', text: responseText,
+        id: Date.now() + 1, type: 'bot', text: data.response,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }
       setMessages((prev) => [...prev, botMsg])
-      setIsTyping(false)
-    }, 1500)
+    } catch (err) {
+      const errorMsg = {
+        id: Date.now() + 1, type: 'bot',
+        text: lang === 'hi'
+          ? 'क्षमा करें, कुछ गड़बड़ हुई। कृपया फिर से कोशिश करें। 🙏'
+          : 'Sorry, something went wrong. Please try again. 🙏',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }
+      setMessages((prev) => [...prev, errorMsg])
+    }
+    setIsTyping(false)
   }
 
   const handleKeyDown = (e) => { if (e.key === 'Enter') handleSend() }
@@ -152,7 +150,7 @@ function AIAssistant() {
                 placeholder={t('aiPage.placeholder')}
                 value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown}
               />
-              <button className="ai-send-btn" onClick={() => handleSend()} aria-label="Send message">
+              <button className="ai-send-btn" onClick={() => handleSend()} aria-label="Send message" disabled={isTyping}>
                 <Send size={18} />
               </button>
             </div>

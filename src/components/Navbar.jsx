@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Sprout } from 'lucide-react'
+import { Sprout, User } from 'lucide-react'
 import { useLang } from '../context/LanguageContext'
+import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
 
 function Navbar() {
@@ -10,6 +11,7 @@ function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
   const { t, toggleLang, lang } = useLang()
+  const { isAuthenticated, user } = useAuth()
 
   const navItems = [
     { path: '/', label: t('nav.home') },
@@ -73,6 +75,14 @@ function Navbar() {
           <Link to="/ai-assistant" className="nav-cta">
             {t('nav.aiAssistant')}
           </Link>
+
+          <Link to="/login" className="nav-login-btn">
+            {isAuthenticated ? (
+              <span className="nav-avatar">{user?.name ? user.name[0].toUpperCase() : <User size={16} />}</span>
+            ) : (
+              <><User size={16} /> {lang === 'hi' ? 'लॉगिन' : 'Login'}</>
+            )}
+          </Link>
         </div>
 
         <div className="nav-mobile-right">
@@ -102,6 +112,9 @@ function Navbar() {
           ))}
           <Link to="/ai-assistant" className="nav-cta">
             {t('nav.aiAssistant')}
+          </Link>
+          <Link to="/login" className="nav-link">
+            {isAuthenticated ? (lang === 'hi' ? '👤 प्रोफ़ाइल' : '👤 Profile') : (lang === 'hi' ? '🔐 लॉगिन' : '🔐 Login')}
           </Link>
         </div>
       </div>

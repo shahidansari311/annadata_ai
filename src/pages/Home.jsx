@@ -19,24 +19,24 @@ import './Home.css'
 
 const testimonials = [
   {
-    text: 'Annadata AI helped me understand which fertilizers to use for my wheat crop. My yield increased by 30% this season!',
-    textHi: 'अन्नदाता AI ने मुझे समझने में मदद की कि मेरी गेहूं की फसल के लिए कौन से उर्वरक का उपयोग करना है। इस सीजन में मेरी उपज 30% बढ़ गई!',
-    name: 'Ramesh Kumar',
-    location: 'Madhya Pradesh',
-    initials: 'RK',
+    text: 'Annadata AI helped me choose the right wheat variety (HD 3226) for my black soil farm. My yield increased from 40 to 52 quintals per hectare this rabi season!',
+    textHi: 'अन्नदाता AI ने मेरी काली मिट्टी के खेत के लिए सही गेहूं किस्म (HD 3226) चुनने में मदद की। इस रबी सीजन में मेरी उपज 40 से बढ़कर 52 क्विंटल प्रति हेक्टेयर हो गई!',
+    name: 'Ramesh Kumar Patel',
+    location: 'Hoshangabad, Madhya Pradesh',
+    initials: 'RP',
   },
   {
-    text: 'The mandi rate feature saves me time every day. I can compare prices and sell at the best rate without travelling to multiple markets.',
-    textHi: 'मंडी भाव की सुविधा मुझे हर दिन समय बचाती है। मैं कई बाज़ारों में जाए बिना कीमतों की तुलना कर सकता हूं और सबसे अच्छे दाम पर बेच सकता हूं।',
-    name: 'Sushila Devi',
-    location: 'Rajasthan',
-    initials: 'SD',
+    text: 'The live mandi rates feature is a game changer. I compared prices across 4 mandis and sold my soybean at ₹4,580/qtl instead of ₹4,200. Saved me ₹15,000 on 40 quintals!',
+    textHi: 'लाइव मंडी भाव फीचर एक क्रांतिकारी बदलाव है। मैंने 4 मंडियों में भाव तुलना की और अपनी सोयाबीन ₹4,200 के बजाय ₹4,580/क्विंटल पर बेची। 40 क्विंटल पर ₹15,000 बचाए!',
+    name: 'Sushila Devi Meena',
+    location: 'Kota, Rajasthan',
+    initials: 'SM',
   },
   {
-    text: 'I love the community feature. I got expert advice on pest control for my cotton crop within hours of asking my question.',
-    textHi: 'मुझे समुदाय फीचर बहुत पसंद है। मेरे कपास की फसल के कीट नियंत्रण पर मुझे कुछ ही घंटों में विशेषज्ञ सलाह मिल गई।',
+    text: 'I asked the AI about organic pest control for my cotton and got neem oil spray schedule within seconds. The community experts also shared their experience with Trichoderma. Very helpful platform!',
+    textHi: 'मैंने AI से अपनी कपास के जैविक कीट नियंत्रण के बारे में पूछा और कुछ सेकंड में नीम तेल स्प्रे शेड्यूल मिल गया। समुदाय विशेषज्ञों ने भी ट्राइकोडर्मा का अनुभव साझा किया। बहुत सहायक प्लेटफॉर्म!',
     name: 'Prakash Patil',
-    location: 'Maharashtra',
+    location: 'Amravati, Maharashtra',
     initials: 'PP',
   },
 ]
@@ -238,7 +238,7 @@ function Home() {
               <div className="video-player-card">
                 <div className="video-embed-wrapper">
                   <iframe
-                    src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                    src="https://www.youtube.com/embed/6LLVxXbEgJI"
                     title={t('howToUse.videoTitle')}
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -251,7 +251,7 @@ function Home() {
                     <span>{t('howToUse.duration')}</span>
                   </div>
                   <a
-                    href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    href="https://www.youtube.com/watch?v=6LLVxXbEgJI"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-outline video-full-btn"

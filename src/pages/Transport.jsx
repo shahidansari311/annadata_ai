@@ -1,16 +1,13 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Star, MapPin } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import ScrollReveal from '../components/ScrollReveal'
 import { useLang } from '../context/LanguageContext'
+import { useAuth } from '../context/AuthContext'
+import { transportAPI } from '../services/api'
+import { useNavigate } from 'react-router-dom'
 import './Transport.css'
-
-const drivers = [
-  { name: 'Vijay Transport', vehicle: 'Tata Ace — 1.5 Ton', rating: 4.8, trips: 234, distance: '12 km away', distanceHi: '12 km दूर', emoji: '🚛', available: true },
-  { name: 'Raju Logistics', vehicle: 'Mahindra Bolero Pickup — 2 Ton', rating: 4.6, trips: 189, distance: '18 km away', distanceHi: '18 km दूर', emoji: '🚚', available: true },
-  { name: 'Singh Transport Co.', vehicle: 'Ashok Leyland Ecomet — 5 Ton', rating: 4.9, trips: 412, distance: '25 km away', distanceHi: '25 km दूर', emoji: '🚛', available: true },
-  { name: 'Krishna Carriers', vehicle: 'Tata 407 — 3.5 Ton', rating: 4.5, trips: 156, distance: '8 km away', distanceHi: '8 km दूर', emoji: '🚚', available: false },
-]
 
 const trackingSteps = [
   { label: 'Order Placed', labelHi: 'ऑर्डर दिया', time: '10:30 AM', icon: '📋', status: 'completed' },
@@ -38,6 +35,62 @@ const pageTransition = {
 
 function Transport() {
   const { t, lang } = useLang()
+  const { isAuthenticated } = useAuth()
+  const navigate = useNavigate()
+  const [drivers, setDrivers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [submitSuccess, setSubmitSuccess] = useState(false)
+
+  // Form state
+  const [formData, setFormData] = useState({
+    cropType: 'wheat',
+    weight: 25,
+    pickupLocation: '',
+    destination: '',
+    preferredDate: '',
+    notes: '',
+  })
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      try {
+        const data = await transportAPI.getProviders()
+        setDrivers(data.providers)
+      } catch (err) {
+        console.error('Failed to fetch providers:', err)
+      }
+      setLoading(false)
+    }
+    fetchProviders()
+  }, [])
+
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!isAuthenticated) {
+      navigate('/login')
+      return
+    }
+
+    if (!formData.pickupLocation || !formData.destination) {
+      alert(lang === 'hi' ? 'कृपया पिकअप और डिलीवरी स्थान भरें' : 'Please fill pickup and delivery locations')
+      return
+    }
+
+    setSubmitting(true)
+    try {
+      await transportAPI.createRequest(formData)
+      setSubmitSuccess(true)
+      setTimeout(() => setSubmitSuccess(false), 5000)
+    } catch (err) {
+      alert(err.message)
+    }
+    setSubmitting(false)
+  }
 
   return (
     <motion.div className="page-wrapper transport-page" {...pageTransition}>
@@ -54,76 +107,92 @@ function Transport() {
               <h3>{t('transportPage.requestPickup')}</h3>
               <p>{t('transportPage.requestPickupDesc')}</p>
 
-              <div className="form-group">
-                <label>{t('transportPage.cropType')}</label>
-                <select defaultValue="wheat">
-                  {cropOptions.map((c) => (
-                    <option key={c.value} value={c.value}>{lang === 'hi' ? c.hi : c.en}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-row">
+              <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label>{t('transportPage.weight')}</label>
-                  <input type="number" placeholder="e.g., 50" defaultValue="25" />
+                  <label>{t('transportPage.cropType')}</label>
+                  <select name="cropType" value={formData.cropType} onChange={handleChange}>
+                    {cropOptions.map((c) => (
+                      <option key={c.value} value={c.value}>{lang === 'hi' ? c.hi : c.en}</option>
+                    ))}
+                  </select>
                 </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>{t('transportPage.weight')}</label>
+                    <input type="number" name="weight" placeholder="e.g., 50" value={formData.weight} onChange={handleChange} />
+                  </div>
+                  <div className="form-group">
+                    <label>{t('transportPage.preferredDate')}</label>
+                    <input type="date" name="preferredDate" value={formData.preferredDate} onChange={handleChange} />
+                  </div>
+                </div>
+
                 <div className="form-group">
-                  <label>{t('transportPage.preferredDate')}</label>
-                  <input type="date" />
+                  <label>{t('transportPage.pickupLocation')}</label>
+                  <input type="text" name="pickupLocation" placeholder={lang === 'hi' ? 'गांव, तहसील, जिला' : 'Village, Tehsil, District'} value={formData.pickupLocation} onChange={handleChange} />
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label>{t('transportPage.pickupLocation')}</label>
-                <input type="text" placeholder={lang === 'hi' ? 'गांव, तहसील, जिला' : 'Village, Tehsil, District'} defaultValue="Hoshangabad, MP" />
-              </div>
+                <div className="form-group">
+                  <label>{t('transportPage.deliveryDest')}</label>
+                  <input type="text" name="destination" placeholder={lang === 'hi' ? 'मंडी का नाम या शहर' : 'Mandi name or city'} value={formData.destination} onChange={handleChange} />
+                </div>
 
-              <div className="form-group">
-                <label>{t('transportPage.deliveryDest')}</label>
-                <input type="text" placeholder={lang === 'hi' ? 'मंडी का नाम या शहर' : 'Mandi name or city'} defaultValue="Bhopal Mandi" />
-              </div>
+                <div className="form-group">
+                  <label>{t('transportPage.additionalNotes')}</label>
+                  <textarea name="notes" placeholder={lang === 'hi' ? 'पिकअप के लिए कोई विशेष निर्देश...' : 'Any special instructions for pickup...'} value={formData.notes} onChange={handleChange} />
+                </div>
 
-              <div className="form-group">
-                <label>{t('transportPage.additionalNotes')}</label>
-                <textarea placeholder={lang === 'hi' ? 'पिकअप के लिए कोई विशेष निर्देश...' : 'Any special instructions for pickup...'} />
-              </div>
+                {submitSuccess && (
+                  <div style={{ color: 'var(--color-accent)', fontSize: '0.9rem', padding: '8px', textAlign: 'center' }}>
+                    ✅ {lang === 'hi' ? 'अनुरोध सफलतापूर्वक जमा!' : 'Request submitted successfully!'}
+                  </div>
+                )}
 
-              <motion.button className="form-submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                {t('transportPage.findProviders')}
-              </motion.button>
+                <motion.button className="form-submit" type="submit" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} disabled={submitting}>
+                  {submitting
+                    ? (lang === 'hi' ? 'भेज रहे हैं...' : 'Submitting...')
+                    : t('transportPage.findProviders')}
+                </motion.button>
+              </form>
             </div>
           </ScrollReveal>
 
           <ScrollReveal direction="right">
             <div className="drivers-section">
               <h3>{t('transportPage.nearbyProviders')}</h3>
-              <div className="drivers-list">
-                {drivers.map((d, i) => (
-                  <motion.div
-                    key={d.name}
-                    className="driver-card"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    whileHover={{ x: 4 }}
-                  >
-                    <div className="driver-avatar">{d.emoji}</div>
-                    <div className="driver-info">
-                      <h4>{d.name}</h4>
-                      <p className="driver-vehicle">{d.vehicle}</p>
-                      <div className="driver-meta">
-                        <span className="driver-rating"><Star size={12} /> {d.rating}</span>
-                        <span>{d.trips} {t('transportPage.trips')}</span>
-                        <span><MapPin size={12} /> {lang === 'hi' ? d.distanceHi : d.distance}</span>
+              {loading ? (
+                <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '2rem 0' }}>
+                  {lang === 'hi' ? 'लोड हो रहा है...' : 'Loading providers...'}
+                </p>
+              ) : (
+                <div className="drivers-list">
+                  {drivers.map((d, i) => (
+                    <motion.div
+                      key={d._id || d.name}
+                      className="driver-card"
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.1 }}
+                      whileHover={{ x: 4 }}
+                    >
+                      <div className="driver-avatar">{d.emoji}</div>
+                      <div className="driver-info">
+                        <h4>{d.name}</h4>
+                        <p className="driver-vehicle">{d.vehicle}</p>
+                        <div className="driver-meta">
+                          <span className="driver-rating"><Star size={12} /> {d.rating}</span>
+                          <span>{d.trips} {t('transportPage.trips')}</span>
+                          <span><MapPin size={12} /> {lang === 'hi' ? d.distanceHi : d.distance}</span>
+                        </div>
                       </div>
-                    </div>
-                    <button className="driver-contact" style={{ opacity: d.available ? 1 : 0.5, pointerEvents: d.available ? 'auto' : 'none' }}>
-                      {d.available ? t('transportPage.contact') : t('transportPage.busy')}
-                    </button>
-                  </motion.div>
-                ))}
-              </div>
+                      <button className="driver-contact" style={{ opacity: d.available ? 1 : 0.5, pointerEvents: d.available ? 'auto' : 'none' }}>
+                        {d.available ? t('transportPage.contact') : t('transportPage.busy')}
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
             </div>
           </ScrollReveal>
         </div>
