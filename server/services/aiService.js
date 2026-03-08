@@ -37,7 +37,7 @@ const initializeAI = () => {
   return model
 }
 
-export const getAIResponse = async (message, chatHistory = []) => {
+export const getAIResponse = async (message, chatHistory = [], imageBase64 = null) => {
   const aiModel = initializeAI()
 
   if (!aiModel) {
@@ -46,10 +46,10 @@ export const getAIResponse = async (message, chatHistory = []) => {
   }
 
   try {
-    // Build chat history for context
+    // Build chat history for context (exclude base64 from history to save tokens)
     const history = chatHistory.slice(-10).map(msg => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }],
+      parts: [{ text: msg.content.substring(0, 1000) }], // limit history text length
     }))
 
     const chat = aiModel.startChat({
@@ -64,7 +64,24 @@ export const getAIResponse = async (message, chatHistory = []) => {
       },
     })
 
-    const result = await chat.sendMessage(message)
+    const messageParts = [{ text: message }]
+
+    if (imageBase64) {
+      try {
+        const mimeType = imageBase64.split(';')[0].split(':')[1]
+        const data = imageBase64.split(',')[1]
+        messageParts.push({
+          inlineData: {
+            data,
+            mimeType
+          }
+        })
+      } catch (e) {
+        console.error("Failed to parse image for AI")
+      }
+    }
+
+    const result = await chat.sendMessage(messageParts)
     const response = result.response.text()
     return response
   } catch (err) {
@@ -102,4 +119,87 @@ Based on my agricultural knowledge base, here are some insights:
 Would you like me to help with anything else? 🌾`
 }
 
-export default { getAIResponse }
+export const getMandiRatesFromAI = async (state, district) => {
+  const aiModel = initializeAI()
+  if (!aiModel) return null
+  
+  try {
+    const prompt = `You are a real-time agricultural market data provider. Provide the current (or highly realistic estimated) mandi (market) rates for major agricultural commodities in the district of ${district}, ${state}, India. 
+RESPOND ONLY WITH VALID JSON. Do not include markdown formatting like \`\`\`json.
+The JSON must be an array of objects. Each object must strictly follow this structure:
+{
+  "name": "Crop Name (English)",
+  "nameHi": "Crop Name (Hindi)",
+  "emoji": "🌾",
+  "min": 2000,
+  "max": 2500,
+  "modal": 2200,
+  "trend": "up", // "up", "down", or "stable"
+  "change": "+₹50", 
+  "sparkline": [40, 45, 60, 55, 70, 65, 80] // Array of 7 numbers representing weekly trend
+}
+Provide data for at least 6 major crops grown in that specific region. Make it realistic.`
+
+    const result = await aiModel.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.2, // Low temperature for consistent JSON data
+      }
+    })
+    
+    let responseText = result.response.text()
+    responseText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    
+    return JSON.parse(responseText)
+  } catch (err) {
+    console.error('Failed to generate mandi rates from AI:', err.message)
+    return null
+  }
+}
+
+export const generateCropDetails = async (cropName) => {
+  const aiModel = initializeAI()
+  if (!aiModel) return null
+  
+  try {
+    const prompt = `You are a professional agricultural data provider. A farmer is searching for information about the crop: "${cropName}".
+Provide comprehensive, scientifically accurate details about this crop in a strict JSON format. 
+DO NOT include markdown formatting like \`\`\`json. The JSON must match this structure exactly:
+{
+  "name": "Crop Name (English)",
+  "nameHi": "Crop Name (Hindi)",
+  "emoji": "🌱", // Appropriate single emoji for this crop
+  "season": "kharif", // Must be strictly one of: "kharif", "rabi", or "zaid"
+  "soil": "Description of ideal soil (English)",
+  "water": "Water requirements (English)",
+  "temp": "Ideal temperature range e.g. 20-30°C",
+  "duration": "Growth duration e.g. 100-120 days",
+  "durationHi": "Growth duration in Hindi e.g. 100-120 दिन",
+  "pests": ["Pest 1", "Pest 2"], // Array of strings (English)
+  "fertilizer": ["Fertilizer 1", "Fertilizer 2"], // Array of strings (English)
+  "irrigation": ["Method 1", "Method 2"], // Array of strings (English)
+  "tags": ["Tag1", "Tag2"], // English search tags
+  "tagsHi": ["टैग1", "टैग2"] // Hindi search tags
+}
+Ensure the data is accurate for Indian farming conditions.`
+
+    const result = await aiModel.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: {
+        maxOutputTokens: 1000,
+        temperature: 0.1, // Very low temperature for strict JSON
+      }
+    })
+    
+    let responseText = result.response.text()
+    responseText = responseText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+    
+    return JSON.parse(responseText)
+  } catch (err) {
+    console.error('Failed to generate crop from AI:', err.message)
+    return null
+  }
+}
+
+export default { getAIResponse, getMandiRatesFromAI, generateCropDetails }

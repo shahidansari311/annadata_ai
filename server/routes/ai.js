@@ -8,7 +8,7 @@ const router = express.Router()
 // ── POST /api/ai/chat ──────────────────────────────────────
 router.post('/chat', optionalAuth, async (req, res) => {
   try {
-    const { message, sessionId } = req.body
+    const { message, sessionId, imageBase64 } = req.body
 
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required.' })
@@ -29,11 +29,11 @@ router.post('/chat', optionalAuth, async (req, res) => {
     // Add user message to history
     chatHistory.messages.push({
       role: 'user',
-      content: message.trim(),
+      content: imageBase64 ? `[Image Uploaded] ${message.trim()}` : message.trim(),
     })
 
     // Get AI response
-    const aiResponse = await getAIResponse(message.trim(), chatHistory.messages)
+    const aiResponse = await getAIResponse(message.trim(), chatHistory.messages, imageBase64)
 
     // Add AI response to history
     chatHistory.messages.push({

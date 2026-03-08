@@ -14,6 +14,7 @@ import SectionHeader from '../components/SectionHeader'
 import ScrollReveal from '../components/ScrollReveal'
 import AnimatedCounter from '../components/AnimatedCounter'
 import ParticleField from '../components/ParticleField'
+import WeatherWidget from '../components/WeatherWidget'
 import { useLang } from '../context/LanguageContext'
 import './Home.css'
 
@@ -119,6 +120,10 @@ function Home() {
               <Link to="/ai-assistant" className="btn-outline">
                 <Mic size={18} /> {t('hero.tryAI')}
               </Link>
+            </div>
+            
+            <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'center' }}>
+              <WeatherWidget />
             </div>
           </motion.div>
         </div>

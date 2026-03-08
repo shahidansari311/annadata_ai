@@ -1,5 +1,6 @@
 import express from 'express'
 import MandiRate from '../models/MandiRate.js'
+import { getMandiRatesFromAI } from '../services/aiService.js'
 
 const router = express.Router()
 
@@ -18,14 +19,22 @@ router.get('/', async (req, res) => {
       ]
     }
 
-    const rates = await MandiRate.find(filter).sort({ name: 1 })
-
-    // Get unique states and districts for dropdowns
+    // Get unique states and districts for dropdowns from DB
     const states = await MandiRate.distinct('state')
     const districts = state
       ? await MandiRate.distinct('district', { state })
       : await MandiRate.distinct('district')
 
+    // If a specific region is selected, fetch live/estimated data from AI
+    if (state && district && !search) {
+      const aiRates = await getMandiRatesFromAI(state, district)
+      if (aiRates && Array.isArray(aiRates) && aiRates.length > 0) {
+        return res.json({ rates: aiRates, states, districts })
+      }
+    }
+
+    // Fallback to static DB data
+    const rates = await MandiRate.find(filter).sort({ name: 1 })
     res.json({ rates, states, districts })
   } catch (err) {
     console.error('Mandi rates fetch error:', err)

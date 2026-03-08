@@ -1,0 +1,109 @@
+.weather-widget {
+  background: rgba(30, 41, 59, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.5rem;
+  color: white;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  margin-bottom: 2rem;
+}
+
+.weather-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.weather-icon-temp {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.weather-icon-temp h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1;
+}
+
+.weather-desc p {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  text-transform: capitalize;
+}
+
+.weather-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.weather-details span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.weather-forecast {
+  display: flex;
+  justify-content: space-between;
+}
+
+.forecast-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.forecast-day span:first-child {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.forecast-day span:last-child {
+  font-weight: 600;
+}
+
+.forecast-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.loading-skeleton {
+  height: 220px;
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.7) 25%, rgba(45, 55, 72, 0.7) 50%, rgba(30, 41, 59, 0.7) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@media (max-width: 768px) {
+  .weather-widget {
+    max-width: 100%;
+  }
+}

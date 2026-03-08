@@ -1,5 +1,6 @@
 import express from 'express'
 import Crop from '../models/Crop.js'
+import { generateCropDetails } from '../services/aiService.js'
 
 const router = express.Router()
 
@@ -22,7 +23,30 @@ router.get('/', async (req, res) => {
       ]
     }
 
-    const crops = await Crop.find(filter).sort({ name: 1 })
+    let crops = await Crop.find(filter).sort({ name: 1 })
+
+    // If search yields no results, dynamically generate from AI and save
+    if (search && crops.length === 0) {
+      const generatedData = await generateCropDetails(search)
+      if (generatedData) {
+        // Enforce enum validation
+        if (!['kharif', 'rabi', 'zaid'].includes(generatedData.season)) {
+          generatedData.season = 'kharif'
+        }
+        
+        try {
+          // Save to DB so subsequent searches are fast
+          const newCrop = new Crop(generatedData)
+          await newCrop.save()
+          crops = [newCrop]
+        } catch (dbErr) {
+          // If save fails (e.g. duplicate key), just return the generated data
+          console.error('Failed to save generated crop:', dbErr.message)
+          crops = [generatedData]
+        }
+      }
+    }
+
     res.json({ crops })
   } catch (err) {
     console.error('Crops fetch error:', err)

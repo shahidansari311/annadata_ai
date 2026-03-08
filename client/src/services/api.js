@@ -86,8 +86,8 @@ export const transportAPI = {
 
 // ── AI Chat API ────────────────────────────────────────────
 export const aiAPI = {
-  chat: (message, sessionId) =>
-    apiFetch('/ai/chat', { method: 'POST', body: JSON.stringify({ message, sessionId }) }),
+  chat: (message, sessionId, imageBase64) =>
+    apiFetch('/ai/chat', { method: 'POST', body: JSON.stringify({ message, sessionId, imageBase64 }) }),
   getHistory: (sessionId) =>
     apiFetch(`/ai/history?sessionId=${sessionId}`),
 }

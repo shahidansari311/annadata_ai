@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Mic, Send, Sprout, Sparkles } from 'lucide-react'
+import { Mic, Send, Sprout, Sparkles, ImagePlus, X } from 'lucide-react'
 import SectionHeader from '../components/SectionHeader'
 import { useLang } from '../context/LanguageContext'
 import { aiAPI } from '../services/api'
@@ -33,27 +33,48 @@ function AIAssistant() {
   const [input, setInput] = useState('')
   const [isListening, setIsListening] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
   const [sessionId] = useState(() => `session_${Date.now()}`)
   const messagesEndRef = useRef(null)
+  const fileInputRef = useRef(null)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isTyping])
+  }, [messages, isTyping, selectedImage])
+
+  const handleImageFile = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert(lang === 'hi' ? "कृपया 5MB से छोटी छवि चुनें।" : "Please select an image smaller than 5MB.")
+        return
+      }
+      const reader = new FileReader()
+      reader.onloadend = () => setSelectedImage(reader.result)
+      reader.readAsDataURL(file)
+    }
+  }
 
   const handleSend = async (text) => {
     const msg = text || input.trim()
-    if (!msg || isTyping) return
+    const imgToSend = selectedImage
+    
+    if ((!msg && !imgToSend) || isTyping) return
 
     const userMsg = {
-      id: Date.now(), type: 'user', text: msg,
+      id: Date.now(), type: 'user', 
+      text: msg || (lang === 'hi' ? 'छवि का विश्लेषण करें' : 'Analyze this image'),
+      image: imgToSend,
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     }
+    
     setMessages((prev) => [...prev, userMsg])
     setInput('')
+    setSelectedImage(null)
     setIsTyping(true)
 
     try {
-      const data = await aiAPI.chat(msg, sessionId)
+      const data = await aiAPI.chat(msg, sessionId, imgToSend)
       const botMsg = {
         id: Date.now() + 1, type: 'bot', text: data.response,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -121,6 +142,11 @@ function AIAssistant() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     transition={{ duration: 0.3 }}
                   >
+                    {msg.image && (
+                      <div className="chat-message-image">
+                        <img src={msg.image} alt="Uploaded crop" />
+                      </div>
+                    )}
                     {msg.type === 'bot' ? (
                       <p>{formatBotText(msg.text)}</p>
                     ) : (
@@ -141,18 +167,57 @@ function AIAssistant() {
               <div ref={messagesEndRef} />
             </div>
 
-            <div className="ai-chat-input-area">
-              <button className={`ai-mic-btn ${isListening ? 'active' : ''}`} onClick={toggleMic} aria-label="Voice input">
-                <Mic size={20} />
-              </button>
-              <input
-                className="ai-chat-input" type="text"
-                placeholder={t('aiPage.placeholder')}
-                value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown}
-              />
-              <button className="ai-send-btn" onClick={() => handleSend()} aria-label="Send message" disabled={isTyping}>
-                <Send size={18} />
-              </button>
+            <div className="ai-chat-input-wrapper">
+              <AnimatePresence>
+                {selectedImage && (
+                  <motion.div 
+                    className="ai-image-preview"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                  >
+                    <img src={selectedImage} alt="Preview" />
+                    <button className="ai-image-preview-close" onClick={() => setSelectedImage(null)}>
+                      <X size={14} />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              
+              <div className="ai-chat-input-area">
+                <input 
+                  type="file" 
+                  accept="image/jpeg, image/png, image/jpg" 
+                  ref={fileInputRef} 
+                  style={{ display: 'none' }} 
+                  onChange={handleImageFile}
+                />
+                <button 
+                  className="ai-action-btn" 
+                  onClick={() => fileInputRef.current?.click()} 
+                  aria-label="Upload image"
+                  disabled={isTyping}
+                >
+                  <ImagePlus size={20} />
+                </button>
+                <button 
+                  className={`ai-action-btn mic-btn ${isListening ? 'active' : ''}`} 
+                  onClick={toggleMic} 
+                  aria-label="Voice input"
+                >
+                  <Mic size={20} />
+                </button>
+                
+                <input
+                  className="ai-chat-input" type="text"
+                  placeholder={lang === 'hi' ? (selectedImage ? 'छवि के बारे में पूछें...' : 'खेती से जुड़े सवाल पूछें (या फोटो डालें)...') : (selectedImage ? 'Ask about this image...' : 'Ask your farming questions (or upload a photo)...')}
+                  value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown}
+                />
+                
+                <button className="ai-send-btn" onClick={() => handleSend()} aria-label="Send message" disabled={isTyping}>
+                  <Send size={18} />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -180,3 +245,4 @@ function AIAssistant() {
 }
 
 export default AIAssistant
+
