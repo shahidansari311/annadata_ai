@@ -185,8 +185,7 @@ export const translations = {
       teamTag: 'Our Team',
       teamTitle: 'The People Behind Annadata',
       teamSubtitle: 'A passionate team of developers, designers, and agricultural enthusiasts.',
-      journeyTag: 'Our Journey',
-      journeyTitle: 'Building the Future of Farming',
+
     },
 
     // Footer
@@ -390,8 +389,7 @@ export const translations = {
       teamTag: 'हमारी टीम',
       teamTitle: 'अन्नदाता के पीछे के लोग',
       teamSubtitle: 'डेवलपर्स, डिज़ाइनरों और कृषि उत्साही लोगों की एक समर्पित टीम।',
-      journeyTag: 'हमारी यात्रा',
-      journeyTitle: 'खेती के भविष्य का निर्माण',
+
     },
 
     // Footer

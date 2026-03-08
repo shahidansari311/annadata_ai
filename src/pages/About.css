@@ -178,56 +178,6 @@
   font-size: 0.82rem;
 }
 
-/* Timeline */
-.about-timeline {
-  max-width: 600px;
-  margin: 0 auto;
-  position: relative;
-  padding-left: var(--space-2xl);
-}
-
-.about-timeline::before {
-  content: '';
-  position: absolute;
-  left: 11px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: var(--color-border);
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: var(--space-xl);
-  padding-left: var(--space-xl);
-}
-
-.timeline-dot {
-  position: absolute;
-  left: -24px;
-  top: 4px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: var(--color-bg-card);
-  border: 3px solid var(--color-accent);
-  z-index: 1;
-}
-
-.timeline-item h4 {
-  font-size: 1rem;
-  color: var(--color-accent);
-  margin-bottom: 2px;
-}
-
-.timeline-item h3 {
-  font-size: 1.1rem;
-  margin-bottom: var(--space-xs);
-}
-
-.timeline-item p {
-  font-size: 0.88rem;
-}
 
 @media (max-width: 768px) {
   .mission-grid {

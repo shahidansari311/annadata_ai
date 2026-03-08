@@ -56,12 +56,7 @@ function About() {
     { icon: '🎨', role: lang === 'hi' ? 'UI/UX डिज़ाइनर' : 'UI/UX Designer', desc: lang === 'hi' ? 'किसान-केंद्रित डिज़ाइन' : 'Farmer-centric design, research' },
   ]
 
-  const timeline = [
-    { year: '2024', title: lang === 'hi' ? 'विचार और अनुसंधान' : 'Idea & Research', desc: lang === 'hi' ? 'भारतीय किसानों के लिए तकनीक-संचालित समाधानों की आवश्यकता की पहचान की।' : 'Identified the need for technology-driven solutions for Indian farmers.' },
-    { year: '2025', title: lang === 'hi' ? 'प्लेटफॉर्म विकास' : 'Platform Development', desc: lang === 'hi' ? 'फसल बुद्धिमत्ता, समुदाय और बाज़ार सुविधाओं के साथ कोर प्लेटफॉर्म बनाया।' : 'Built the core platform with crop intelligence, community, and market features.' },
-    { year: '2026', title: lang === 'hi' ? 'AI एकीकरण' : 'AI Integration', desc: lang === 'hi' ? 'वॉयस AI सहायक, LLM-संचालित सिफारिशें और रीयल-टाइम एनालिटिक्स जोड़ा।' : 'Added voice AI assistant, LLM-powered recommendations, and real-time analytics.' },
-    { year: lang === 'hi' ? 'भविष्य' : 'Future', title: lang === 'hi' ? 'राष्ट्रव्यापी विस्तार' : 'Scale Nationwide', desc: lang === 'hi' ? 'सभी राज्यों में विस्तार, IoT सेंसर, सैटेलाइट मॉनिटरिंग और सरकारी योजना एकीकरण।' : 'Expand to all states, add IoT sensors, satellite monitoring, and government scheme integration.' },
-  ]
+
 
   return (
     <motion.div className="page-wrapper about-page" {...pageTransition}>
@@ -155,22 +150,7 @@ function About() {
           </div>
         </section>
 
-        {/* Journey Timeline */}
-        <section className="section">
-          <SectionHeader tag={t('aboutPage.journeyTag')} title={t('aboutPage.journeyTitle')} />
-          <div className="about-timeline">
-            {timeline.map((item, i) => (
-              <ScrollReveal key={item.year} delay={i * 0.1}>
-                <div className="timeline-item">
-                  <div className="timeline-dot" />
-                  <h4>{item.year}</h4>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              </ScrollReveal>
-            ))}
-          </div>
-        </section>
+
       </div>
     </motion.div>
   )
