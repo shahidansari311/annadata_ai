@@ -95,16 +95,10 @@ const connectDB = async () => {
 }
 
 // ── Server Start/Export ────────────────────────────────────
-if (process.env.NODE_ENV !== 'production') {
-  connectDB().then(() => {
-    app.listen(PORT, () => {
-      console.log(`🚀 Annadata AI Server running on port ${PORT}`)
-    })
+connectDB().then(() => {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚀 Annadata AI Server running on port ${PORT}`)
   })
-}
-
-// For Vercel serverless functions
-export default async (req, res) => {
-  await connectDB()
-  return app(req, res)
-}
+}).catch((err) => {
+  console.error('Failed to start server:', err)
+})
