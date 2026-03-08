@@ -1,5 +1,5 @@
 // ── Annadata AI — API Service ─────────────────────────────
-const API_BASE = '/api'
+const API_BASE = import.meta.env.VITE_API_URL || '/api'
 
 // Token management
 const getToken = () => localStorage.getItem('annadata_token')
