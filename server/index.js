@@ -67,17 +67,28 @@ app.use((err, req, res, next) => {
   })
 })
 
-// ── MongoDB Connection & Server Start ──────────────────────
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
+// ── MongoDB Connection ──────────────────────────────────────
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return
+  try {
+    await mongoose.connect(process.env.MONGODB_URI)
     console.log('✅ Connected to MongoDB')
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err.message)
+  }
+}
+
+// ── Server Start/Export ────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  connectDB().then(() => {
     app.listen(PORT, () => {
       console.log(`🚀 Annadata AI Server running on port ${PORT}`)
     })
   })
-  .catch((err) => {
-    console.error('❌ MongoDB connection error:', err.message)
-    process.exit(1)
-  })
+}
 
-export default app
+// For Vercel serverless functions
+export default async (req, res) => {
+  await connectDB()
+  return app(req, res)
+}
