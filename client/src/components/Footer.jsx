@@ -50,9 +50,9 @@ function Footer() {
           <div className="footer-column">
             <h4>{t('footer.contact')}</h4>
             <ul>
-              <li><a href="mailto:hello@annadata.ai">hello@annadata.ai</a></li>
-              <li><a href="#">+91 98765 43210</a></li>
-              <li><a href="#">New Delhi, India</a></li>
+              <li><a href="mailto:shashanktomar912@gmail.com">shashanktomar912@gmail.com</a></li>
+              <li><a href="#">+91 8858369784</a></li>
+              <li><a href="#">Ghaziabad, India</a></li>
             </ul>
           </div>
         </div>
